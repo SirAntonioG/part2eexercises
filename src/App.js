@@ -66,7 +66,7 @@ const App = () => {
         setPersons(persons.concat(returnedPerson));
         setMessage({
           type: "message done",
-          text: `Added ${returnedPerson.name}`,
+          text: `Added ${returnedPerson.name} to Phonebook successfully`,
         });
         setTimeout(() => {
           setMessage(null);
@@ -98,16 +98,27 @@ const App = () => {
       `Are you sure you want to delete ${personToDelete.name}?`
     );
     if (confirm) {
-      personService.erase(id).then((res) => {
-        setPersons(persons.filter((item) => item.id !== personToDelete.id));
-      });
-      setMessage({
-        type: "message done",
-        text: `Deleted ${personToDelete.name}`,
-      });
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      personService
+        .erase(id)
+        .then((res) => {
+          setPersons(persons.filter((item) => item.id !== personToDelete.id));
+          setMessage({
+            type: "message done",
+            text: `${personToDelete.name}'s information was deleted successfully`,
+          });
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+        })
+        .catch((error) => {
+          setMessage({
+            type: "message error",
+            text: `Information of ${personToDelete.name} has already been deleted from server`,
+          });
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+        });
     }
   };
 
